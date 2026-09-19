@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DigitalHub – Digital Product Marketplace</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="hero-badge">
+          <i class="fa-solid fa-sparkles"></i> Over 5,000+ Verified Digital Assets Ready
+        </div>
+        <h1 class="hero-title">
+          Discover Digital Products That <span>Power Your Ideas</span>
+        </h1>
+        <p class="hero-desc">
+          Browse industry-grade source code, design systems, modern web templates, e-books, and presentation decks created by world-class developers and designers.
+        </p>
+
+        <div class="hero-search-box" style="margin-bottom: 2rem;">
+          <input type="text" id="heroSearchInput" placeholder="What are you building today? (e.g. Next.js, Figma, Spring Boot)" onkeydown="if(event.key==='Enter') window.location.href='products.html?search=' + encodeURIComponent(this.value)" />
+          <button class="btn btn-primary" onclick="window.location.href='products.html?search=' + encodeURIComponent(document.getElementById('heroSearchInput').value)">
+            <i class="fa-solid fa-magnifying-glass"></i> Search
+          </button>
+        </div>
+
+        <div class="hero-cta">
+          <a href="products.html" class="btn btn-primary" style="padding: 0.85rem 1.8rem; font-size: 1rem;">
+            <i class="fa-solid fa-compass"></i> Browse Products
+          </a>
+          <a href="register.html?role=seller" class="btn btn-secondary" style="padding: 0.85rem 1.8rem; font-size: 1rem;">
+            <i class="fa-solid fa-store"></i> Become a Seller
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-item">
+            <h3>100%</h3>
+            <p>Verified Assets</p>
+          </div>
+          <div class="stat-item">
+            <h3>Instant</h3>
+            <p>Direct Downloads</p>
+          </div>
+          <div class="stat-item">
+            <h3>Lifetime</h3>
+            <p>Free Updates</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-card-stack">
+          <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800" alt="Code and Design Mockup" class="hero-mockup-img" />
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Featured Categories -->
+  <section class="section" style="background: rgba(255, 255, 255, 0.01); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Explore by Category</h2>
+          <p class="section-subtitle">Curated collections for software developers, UI designers, and founders</p>
+        </div>
+        <a href="products.html" class="view-all-link">View All Categories <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="category-grid" id="categoriesGrid">
+        <!-- Loaded via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Trending Products -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">🔥 Trending Right Now</h2>
+          <p class="section-subtitle">Most downloaded digital products by creators worldwide this week</p>
+        </div>
+        <a href="products.html?sort=downloadCount:desc" class="view-all-link">See All Trending <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="products-grid" id="trendingGrid">
+        <!-- Loaded via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Best Sellers -->
+  <section class="section" style="background: rgba(255, 255, 255, 0.015); border-top: 1px solid var(--border-color);">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">⭐ Top Rated & Best Sellers</h2>
+          <p class="section-subtitle">Highest rated digital assets backed by stellar community reviews</p>
+        </div>
+        <a href="products.html?sort=averageRating:desc" class="view-all-link">Explore Top Rated <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="products-grid" id="bestSellersGrid">
+        <!-- Loaded via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Recently Added -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">✨ Fresh Releases</h2>
+          <p class="section-subtitle">Newly published tools, kits, and e-books ready for your workflow</p>
+        </div>
+        <a href="products.html?sort=createdAt:desc" class="view-all-link">View Latest Additions <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+      <div class="products-grid" id="recentGrid">
+        <!-- Loaded via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Creator Callout Banner -->
+  <section class="section" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(6, 182, 212, 0.1)); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+    <div class="container" style="text-align: center; max-width: 780px;">
+      <span class="badge-pill badge-format" style="margin-bottom: 1rem; display: inline-block;">Creator Marketplace</span>
+      <h2 style="font-size: 2.4rem; font-weight: 800; color: #fff; margin-bottom: 1rem;">Turn Your Code & Designs Into Recurring Revenue</h2>
+      <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2rem;">
+        Sell directly to thousands of software engineers, founders, and creative directors. Enjoy 85% creator payouts, instant automated file delivery, and real-time sales metrics.
+      </p>
+      <a href="register.html?role=seller" class="btn btn-primary" style="padding: 0.9rem 2.2rem; font-size: 1.05rem;">
+        <i class="fa-solid fa-rocket"></i> Open Your Digital Store
+      </a>
+    </div>
+  </section>
+
+  <div id="footer-container"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

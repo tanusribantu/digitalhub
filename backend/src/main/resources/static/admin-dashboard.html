@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Control Room – DigitalHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div style="font-size: 0.78rem; font-weight: 700; color: var(--accent); text-transform: uppercase; margin-bottom: 0.75rem; padding-left: 0.5rem;">
+        <i class="fa-solid fa-shield-halved"></i> Platform Admin
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="admin-dashboard.html" class="sidebar-link active"><i class="fa-solid fa-chart-pie"></i> Platform Overview</a></li>
+        <li><a href="seller-dashboard.html" class="sidebar-link"><i class="fa-solid fa-store"></i> Seller Studio</a></li>
+        <li><a href="products.html" class="sidebar-link"><i class="fa-solid fa-compass"></i> Browse Marketplace</a></li>
+        <li><a href="profile.html" class="sidebar-link"><i class="fa-solid fa-gear"></i> Account Settings</a></li>
+      </ul>
+
+      <div style="margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+        <button onclick="logout()" class="btn btn-secondary" style="width: 100%; justify-content: flex-start; color: var(--accent);">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dash-content">
+      <div class="dash-header">
+        <div>
+          <h1 class="dash-title">Platform Control Room</h1>
+          <p class="dash-subtitle">Manage users, moderate digital products, create coupons, and monitor platform revenue</p>
+        </div>
+        <button class="btn btn-primary" onclick="openCouponModal()">
+          <i class="fa-solid fa-ticket"></i> Create Promo Coupon
+        </button>
+      </div>
+
+      <!-- KPI Metrics -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon green"><i class="fa-solid fa-chart-line"></i></div>
+          <div class="kpi-info">
+            <h4>Gross Platform Revenue</h4>
+            <div class="kpi-val" id="adminTotalRevenue">$0.00</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon purple"><i class="fa-solid fa-users"></i></div>
+          <div class="kpi-info">
+            <h4>Total Users</h4>
+            <div class="kpi-val" id="adminTotalUsers">0</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon blue"><i class="fa-solid fa-store"></i></div>
+          <div class="kpi-info">
+            <h4>Active Creators</h4>
+            <div class="kpi-val" id="adminTotalSellers">0</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon indigo"><i class="fa-solid fa-cube"></i></div>
+          <div class="kpi-info">
+            <h4>Listed Products</h4>
+            <div class="kpi-val" id="adminTotalProducts">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1. User Management -->
+      <div class="table-card">
+        <div class="table-header">
+          <h3 style="color: #fff; font-size: 1.15rem; font-weight: 700;">User & Creator Management</h3>
+          <button class="btn btn-secondary" onclick="loadAllUsers()" style="padding: 0.35rem 0.85rem; font-size: 0.82rem;">Refresh</button>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Role</th>
+                <th>Account Status</th>
+                <th>Joined Date</th>
+                <th>Controls</th>
+              </tr>
+            </thead>
+            <tbody id="adminUsersTableBody">
+              <!-- Loaded via admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 2. Product Moderation -->
+      <div class="table-card">
+        <div class="table-header">
+          <h3 style="color: #fff; font-size: 1.15rem; font-weight: 700;">Product Moderation & Status</h3>
+          <button class="btn btn-secondary" onclick="loadAllProducts()" style="padding: 0.35rem 0.85rem; font-size: 0.82rem;">Refresh</button>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Product & Creator</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Featured</th>
+                <th>Moderation</th>
+              </tr>
+            </thead>
+            <tbody id="adminProductsTableBody">
+              <!-- Loaded via admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 3. Coupon Codes -->
+      <div class="table-card">
+        <div class="table-header">
+          <h3 style="color: #fff; font-size: 1.15rem; font-weight: 700;">Active Coupons & Discounts</h3>
+          <button class="btn btn-secondary" onclick="openCouponModal()" style="padding: 0.35rem 0.85rem; font-size: 0.82rem;">+ New Code</button>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Coupon Code</th>
+                <th>Discount</th>
+                <th>Min. Order</th>
+                <th>Times Used</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="adminCouponsTableBody">
+              <!-- Loaded via admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 4. Community Reports -->
+      <div class="table-card">
+        <div class="table-header">
+          <h3 style="color: #fff; font-size: 1.15rem; font-weight: 700;">Content Moderation Reports</h3>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Target Product</th>
+                <th>Reported Reason</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="adminReportsTableBody">
+              <!-- Loaded via admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Create Coupon Modal -->
+  <div class="modal-backdrop" id="couponModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 style="color: #fff;"><i class="fa-solid fa-ticket" style="color: var(--primary);"></i> Create New Coupon Code</h3>
+        <button class="icon-btn" onclick="closeCouponModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="couponForm" onsubmit="submitCoupon(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="newCouponCode">Coupon Code (Uppercase)</label>
+            <input type="text" id="newCouponCode" class="form-control" placeholder="e.g. FLASH30" required style="text-transform: uppercase;" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="newCouponPercent">Discount Percentage (%)</label>
+              <input type="number" id="newCouponPercent" class="form-control" placeholder="25" min="1" max="100" required />
+            </div>
+            <div class="form-group">
+              <label for="newCouponMinAmount">Minimum Order ($)</label>
+              <input type="number" id="newCouponMinAmount" class="form-control" placeholder="10.00" step="0.01" value="0.00" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="newCouponMaxDiscount">Max Discount Cap ($)</label>
+              <input type="number" id="newCouponMaxDiscount" class="form-control" placeholder="50.00" step="0.01" />
+            </div>
+            <div class="form-group">
+              <label for="newCouponLimit">Usage Limit (Times)</label>
+              <input type="number" id="newCouponLimit" class="form-control" placeholder="500" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeCouponModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Coupon</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

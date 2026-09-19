@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details – DigitalHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <div class="container" id="productDetailsContainer" style="padding: 3rem 1.5rem 5rem;">
+    <!-- Populated dynamically via product-details.js -->
+    <div style="text-align: center; padding: 5rem 0;">
+      <i class="fa-solid fa-spinner fa-spin" style="font-size: 2.5rem; color: var(--primary);"></i>
+      <p style="color: var(--text-muted); margin-top: 1rem;">Loading product details...</p>
+    </div>
+  </div>
+
+  <!-- Review Modal -->
+  <div class="modal-backdrop" id="reviewModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 style="color: #fff; font-size: 1.15rem;"><i class="fa-solid fa-star" style="color: #f59e0b;"></i> Write Verified Review</h3>
+        <button class="icon-btn" onclick="closeReviewModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="submitReview(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Rating (1 to 5 Stars)</label>
+            <select id="reviewRatingSelect" class="form-control" style="background: rgba(255,255,255,0.05); color: #fff;">
+              <option value="5">★★★★★ (5 Stars - Outstanding)</option>
+              <option value="4">★★★★☆ (4 Stars - Very Good)</option>
+              <option value="3">★★★☆☆ (3 Stars - Average)</option>
+              <option value="2">★★☆☆☆ (2 Stars - Below Average)</option>
+              <option value="1">★☆☆☆☆ (1 Star - Poor)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="reviewCommentInput">Review Comments</label>
+            <textarea id="reviewCommentInput" class="form-control" rows="4" placeholder="How did this digital asset help your project? Any feedback on code quality, design, or documentation?" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeReviewModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Post Review</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/product-details.js"></script>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creator Studio – DigitalHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; margin-bottom: 0.75rem; padding-left: 0.5rem;">
+        Seller Portal
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="seller-dashboard.html" class="sidebar-link active"><i class="fa-solid fa-chart-line"></i> Dashboard & Analytics</a></li>
+        <li><a href="products.html" class="sidebar-link"><i class="fa-solid fa-compass"></i> View Marketplace</a></li>
+        <li><a href="downloads.html" class="sidebar-link"><i class="fa-solid fa-cloud-arrow-down"></i> My Downloads</a></li>
+        <li><a href="profile.html" class="sidebar-link"><i class="fa-solid fa-gear"></i> Account Settings</a></li>
+      </ul>
+
+      <div style="margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+        <button onclick="logout()" class="btn btn-secondary" style="width: 100%; justify-content: flex-start; color: var(--accent);">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dash-content">
+      <div class="dash-header">
+        <div>
+          <h1 class="dash-title">Creator Studio</h1>
+          <p class="dash-subtitle">Track real-time earnings, manage digital products, and upload packages</p>
+        </div>
+        <button class="btn btn-primary" onclick="openAddProductModal()">
+          <i class="fa-solid fa-plus"></i> Add New Product
+        </button>
+      </div>
+
+      <!-- KPI Metrics -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon green"><i class="fa-solid fa-sack-dollar"></i></div>
+          <div class="kpi-info">
+            <h4>Total Earnings</h4>
+            <div class="kpi-val" id="statTotalRevenue">$0.00</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon indigo"><i class="fa-solid fa-bag-shopping"></i></div>
+          <div class="kpi-info">
+            <h4>Total Sales</h4>
+            <div class="kpi-val" id="statTotalSales">0</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon blue"><i class="fa-solid fa-box-archive"></i></div>
+          <div class="kpi-info">
+            <h4>Active Products</h4>
+            <div class="kpi-val" id="statTotalProducts">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Management Table -->
+      <div class="table-card">
+        <div class="table-header">
+          <h3 style="color: #fff; font-size: 1.15rem; font-weight: 700;">My Product Catalog</h3>
+          <button class="btn btn-secondary" onclick="loadSellerProducts()" style="padding: 0.35rem 0.85rem; font-size: 0.82rem;">
+            <i class="fa-solid fa-rotate-right"></i> Refresh
+          </button>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Discount</th>
+                <th>Downloads</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="sellerProductsTableBody">
+              <!-- Loaded via seller.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Sales Ledger Table -->
+      <div class="table-card">
+        <div class="table-header">
+          <h3 style="color: #fff; font-size: 1.15rem; font-weight: 700;">Recent Sales & Transactions</h3>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Product Sold</th>
+                <th>Purchase Price</th>
+                <th>Order Status</th>
+                <th>Creator Earning</th>
+              </tr>
+            </thead>
+            <tbody id="sellerSalesTableBody">
+              <!-- Loaded via seller.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add / Edit Product Modal -->
+  <div class="modal-backdrop" id="productModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="productModalTitle" style="color: #fff;">Add New Digital Product</h3>
+        <button class="icon-btn" onclick="closeProductModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="productForm" onsubmit="saveProduct(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="prodTitleInput">Product Title *</label>
+            <input type="text" id="prodTitleInput" class="form-control" placeholder="e.g. Next.js SaaS Starter Kit" required />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="prodCategorySelect">Category *</label>
+              <select id="prodCategorySelect" class="form-control" style="background: rgba(255,255,255,0.05); color: #fff;" required></select>
+            </div>
+            <div class="form-group">
+              <label for="prodPriceInput">Price ($) *</label>
+              <input type="number" id="prodPriceInput" class="form-control" placeholder="29.00" step="0.01" min="0" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="prodDiscountInput">Discount (%)</label>
+              <input type="number" id="prodDiscountInput" class="form-control" placeholder="0" min="0" max="90" value="0" />
+            </div>
+            <div class="form-group">
+              <label for="prodFormatInput">File Format (e.g. ZIP, FIG, PDF)</label>
+              <input type="text" id="prodFormatInput" class="form-control" placeholder="ZIP (Source Code)" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="prodSizeInput">File Size Estimate</label>
+              <input type="text" id="prodSizeInput" class="form-control" placeholder="25 MB" />
+            </div>
+            <div class="form-group">
+              <label for="prodVersionInput">Version</label>
+              <input type="text" id="prodVersionInput" class="form-control" placeholder="1.0" value="1.0" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="prodImageInput">Preview Image URL</label>
+            <input type="url" id="prodImageInput" class="form-control" placeholder="https://images.unsplash.com/..." />
+          </div>
+
+          <div class="form-group">
+            <label for="prodShortDescInput">Short Summary (Shown on cards) *</label>
+            <textarea id="prodShortDescInput" class="form-control" rows="2" placeholder="Catchy one-sentence summary of what this product delivers..." required></textarea>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="prodFullDescInput">Full Detailed Description</label>
+            <textarea id="prodFullDescInput" class="form-control" rows="4" placeholder="Detailed feature breakdown, setup prerequisites, technical documentation..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeProductModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Upload File Modal -->
+  <div class="modal-backdrop" id="uploadFileModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 style="color: #fff;"><i class="fa-solid fa-file-zipper" style="color: var(--primary);"></i> Upload Digital Asset File</h3>
+        <button class="icon-btn" onclick="closeUploadFileModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form onsubmit="submitFileUpload(event)">
+        <div class="modal-body">
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem;">
+            Upload the downloadable package for: <strong id="uploadTargetTitle" style="color: #fff;"></strong>
+          </p>
+
+          <div class="form-group">
+            <label for="productFileInput">Select File (.ZIP, .PDF, .FIG, .EPUB - Max 50MB)</label>
+            <input type="file" id="productFileInput" class="form-control" required style="padding: 0.5rem;" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeUploadFileModal()">Cancel</button>
+          <button type="submit" id="uploadSubmitBtn" class="btn btn-primary">Upload Asset</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/seller.js"></script>
+</body>
+</html>

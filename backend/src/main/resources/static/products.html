@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore Marketplace – DigitalHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <div class="container" style="padding: 2.5rem 1.5rem 5rem;">
+    <!-- Page Header & Search Bar -->
+    <div style="margin-bottom: 2.5rem;">
+      <h1 style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem;">
+        Explore Marketplace
+      </h1>
+      <p style="color: var(--text-muted); font-size: 1rem;">
+        Discover verified developer boilerplates, UI kits, templates, e-books, and digital design tools.
+      </p>
+    </div>
+
+    <!-- Catalog Layout: Filters Sidebar + Grid -->
+    <div style="display: grid; grid-template-columns: 280px 1fr; gap: 2.5rem; align-items: flex-start;">
+      <!-- Filters Sidebar -->
+      <aside style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.75rem; position: sticky; top: 90px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--border-color);">
+          <h3 style="color: #fff; font-size: 1.1rem; font-weight: 700;"><i class="fa-solid fa-sliders"></i> Filters</h3>
+          <button onclick="resetFilters()" style="background: none; color: var(--primary); font-size: 0.82rem; font-weight: 600;">Reset</button>
+        </div>
+
+        <!-- Search Input -->
+        <div class="form-group">
+          <label>Search Keyword</label>
+          <div style="position: relative;">
+            <input type="text" id="catalogSearchInput" class="form-control" placeholder="Search products..." style="padding-left: 2.2rem;" />
+            <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem;"></i>
+          </div>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="form-group">
+          <label for="categorySelect">Category</label>
+          <select id="categorySelect" class="form-control" style="background: rgba(255,255,255,0.05); color: #fff;">
+            <option value="">All Categories</option>
+          </select>
+        </div>
+
+        <!-- Price Range Slider -->
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.45rem;">
+            <label style="margin-bottom: 0;">Max Price</label>
+            <span id="priceRangeVal" style="color: #fff; font-weight: 700; font-size: 0.9rem;">$150</span>
+          </div>
+          <input type="range" id="priceRange" min="5" max="150" value="150" step="5" style="width: 100%; accent-color: var(--primary);" />
+        </div>
+
+        <!-- Rating Filter -->
+        <div class="form-group">
+          <label for="ratingSelect">Minimum Rating</label>
+          <select id="ratingSelect" class="form-control" style="background: rgba(255,255,255,0.05); color: #fff;">
+            <option value="">Any Rating</option>
+            <option value="4.5">★ 4.5 & above</option>
+            <option value="4.0">★ 4.0 & above</option>
+            <option value="3.0">★ 3.0 & above</option>
+          </select>
+        </div>
+      </aside>
+
+      <!-- Main Products Content Area -->
+      <div>
+        <!-- Top Toolbar -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.85rem 1.25rem;">
+          <span id="resultCount" style="color: var(--text-muted); font-size: 0.9rem;">Loading products...</span>
+
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Sort by:</span>
+            <select id="sortSelect" class="form-control" style="width: auto; padding: 0.4rem 0.85rem; background: rgba(255,255,255,0.05); color: #fff; font-size: 0.85rem;">
+              <option value="createdAt:desc">Newest Releases</option>
+              <option value="downloadCount:desc">Most Downloaded</option>
+              <option value="averageRating:desc">Highest Rated</option>
+              <option value="price:asc">Price: Low to High</option>
+              <option value="price:desc">Price: High to Low</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="products-grid" id="catalogProductsGrid">
+          <!-- Loaded via products.js -->
+        </div>
+
+        <!-- Pagination Controls -->
+        <div id="pagination" style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 3.5rem;">
+          <!-- Loaded via products.js -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/products.js"></script>
+</body>
+</html>

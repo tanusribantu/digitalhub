@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account – DigitalHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body style="display: flex; flex-direction: column; justify-content: center; min-height: 100vh; background: radial-gradient(circle at 50% 10%, rgba(99, 102, 241, 0.15) 0%, var(--dark-bg) 70%);">
+
+  <div class="container" style="max-width: 520px; margin: auto; padding: 2.5rem 1.5rem;">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <a href="index.html" class="nav-brand" style="display: inline-flex; justify-content: center; margin-bottom: 1rem;">
+        <div class="brand-icon"><i class="fa-solid fa-cube"></i></div>
+        <span style="font-size: 1.6rem;">Digital<span class="brand-gradient">Hub</span></span>
+      </a>
+      <h2 style="color: #fff; font-size: 1.6rem; font-weight: 800;">Create your DigitalHub account</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">Join as a customer to purchase digital assets or as a seller to open your shop</p>
+    </div>
+
+    <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2.25rem; box-shadow: var(--shadow-lg);">
+      <form id="registerForm" onsubmit="handleRegister(event)">
+        <div class="form-group">
+          <label>Select Account Type</label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <label style="display: flex; align-items: center; gap: 0.75rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.85rem; cursor: pointer;">
+              <input type="radio" name="roleRadio" value="ROLE_CUSTOMER" checked onchange="toggleSellerFields(false)" />
+              <div>
+                <div style="color: #fff; font-weight: 600; font-size: 0.9rem;">Customer</div>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Buy & download</span>
+              </div>
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.75rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 0.85rem; cursor: pointer;">
+              <input type="radio" name="roleRadio" value="ROLE_SELLER" id="roleSellerRadio" onchange="toggleSellerFields(true)" />
+              <div>
+                <div style="color: #fff; font-weight: 600; font-size: 0.9rem;">Creator / Seller</div>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Sell & earn 85%</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" class="form-control" placeholder="e.g. Emily Roberts" required />
+        </div>
+
+        <div class="form-group">
+          <label for="regEmail">Email Address</label>
+          <input type="email" id="regEmail" class="form-control" placeholder="emily@domain.com" required />
+        </div>
+
+        <!-- Dynamic Seller Store Fields -->
+        <div id="sellerFields" style="display: none; background: rgba(6, 182, 212, 0.05); border: 1px solid rgba(6, 182, 212, 0.2); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.25rem;">
+          <div class="form-group">
+            <label for="storeName">Studio or Brand Name</label>
+            <input type="text" id="storeName" class="form-control" placeholder="e.g. PixelForge Systems" />
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="storeBio">Creator Bio</label>
+            <textarea id="storeBio" class="form-control" rows="2" placeholder="Briefly introduce your creations and expertise..."></textarea>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="regPassword">Password</label>
+            <input type="password" id="regPassword" class="form-control" placeholder="Min. 6 characters" minlength="6" required />
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" class="form-control" placeholder="Repeat password" minlength="6" required />
+          </div>
+        </div>
+
+        <button type="submit" id="regSubmitBtn" class="btn btn-primary" style="width: 100%; padding: 0.85rem; font-size: 1rem; margin-top: 0.5rem;">
+          Create Free Account
+        </button>
+      </form>
+
+      <div style="text-align: center; margin-top: 1.75rem; font-size: 0.88rem; color: var(--text-muted);">
+        Already have an account? <a href="login.html" style="color: var(--primary); font-weight: 600;">Sign in instead</a>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 1.5rem;">
+      <a href="index.html" style="font-size: 0.85rem; color: var(--text-light);"><i class="fa-solid fa-arrow-left"></i> Back to Homepage</a>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('role') === 'seller') {
+        document.getElementById('roleSellerRadio').checked = true;
+        toggleSellerFields(true);
+      }
+    });
+
+    function toggleSellerFields(show) {
+      document.getElementById('sellerFields').style.display = show ? 'block' : 'none';
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      const fullName = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const password = document.getElementById('regPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const role = document.querySelector('input[name="roleRadio"]:checked').value;
+      const storeName = document.getElementById('storeName').value.trim();
+      const bio = document.getElementById('storeBio').value.trim();
+
+      if (password !== confirmPassword) {
+        showToast('Passwords do not match', 'warning');
+        return;
+      }
+
+      const btn = document.getElementById('regSubmitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating Account...';
+
+      try {
+        const payload = {
+          fullName,
+          email,
+          password,
+          role,
+          storeName: role === 'ROLE_SELLER' ? storeName : null,
+          bio: role === 'ROLE_SELLER' ? bio : null
+        };
+
+        const res = await api.post('/auth/register', payload);
+        setAuthSession(res);
+        showToast('Account registered successfully!', 'success');
+
+        setTimeout(() => {
+          if (role === 'ROLE_SELLER') {
+            window.location.href = 'seller-dashboard.html';
+          } else {
+            window.location.href = 'products.html';
+          }
+        }, 1000);
+      } catch (err) {
+        showToast(err.message, 'error');
+        btn.disabled = false;
+        btn.innerText = 'Create Free Account';
+      }
+    }
+  </script>
+</body>
+</html>

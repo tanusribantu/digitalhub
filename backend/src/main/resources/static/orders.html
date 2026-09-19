@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order History – DigitalHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <div class="container" style="max-width: 900px; padding: 3rem 1.5rem 5rem;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem;">
+      <div>
+        <h1 style="font-size: 2rem; font-weight: 800; color: #fff;">Purchase History</h1>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">Access all your verified receipts, license keys, and order invoices</p>
+      </div>
+      <a href="downloads.html" class="btn btn-secondary">
+        <i class="fa-solid fa-cloud-arrow-down"></i> My Downloads
+      </a>
+    </div>
+
+    <div id="ordersListContainer">
+      <!-- Loaded via orders.js -->
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/orders.js"></script>
+</body>
+</html>

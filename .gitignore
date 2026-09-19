@@ -1,0 +1,60 @@
+# ==============================================================================
+# DigitalHub .gitignore
+# ==============================================================================
+
+# Compiled Java / Maven artifacts
+**/target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# Node / Frontend artifacts
+node_modules/
+dist/
+build/
+.vite/
+.next/
+.cache/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files & secrets
+.env
+.env.*
+!.env.example
+
+# IDE & Editor files
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+*.swp
+*.swo
+*~
+
+# Operating System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Local database & runtime data
+data/
+*.mv.db
+*.trace.db
+
+# User runtime uploads & logs
+uploads/
+**/uploads/
+logs/
+**/logs/
+temp/
+tmp/

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Digital Downloads – DigitalHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <div class="container" style="padding: 3rem 1.5rem 5rem;">
+    <div style="margin-bottom: 2.5rem;">
+      <h1 style="font-size: 2.2rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem;">
+        <i class="fa-solid fa-cloud-arrow-down" style="color: var(--primary);"></i> My Digital Library
+      </h1>
+      <p style="color: var(--text-muted); font-size: 1rem;">
+        Download files for your purchased digital products, boilerplates, and design assets anytime.
+      </p>
+    </div>
+
+    <div class="products-grid" id="downloadsGrid">
+      <!-- Loaded via downloads.js -->
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/downloads.js"></script>
+</body>
+</html>

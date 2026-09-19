@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Settings & Notifications – DigitalHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <div class="container" style="max-width: 900px; padding: 3rem 1.5rem 5rem;">
+    <h1 style="font-size: 2rem; font-weight: 800; color: #fff; margin-bottom: 2rem;">
+      <i class="fa-solid fa-user-gear" style="color: var(--primary);"></i> Account Settings
+    </h1>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2.5rem;">
+      <!-- Profile Card -->
+      <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2rem;">
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+          <div class="avatar-img" id="profileAvatarInitial" style="width: 54px; height: 54px; font-size: 1.4rem;">U</div>
+          <div>
+            <span class="role-tag" id="profileRoleBadge" style="background: rgba(99,102,241,0.2); color: #818cf8; margin-bottom: 0.2rem;">CUSTOMER</span>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Member since: <span id="profileCreatedDate" style="color: #fff;">--</span></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="profileName" class="form-control" readonly />
+        </div>
+
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="profileEmail" class="form-control" readonly />
+        </div>
+      </div>
+
+      <!-- Quick Links Card -->
+      <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2rem; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <h3 style="color: #fff; font-size: 1.15rem; margin-bottom: 1rem;">Platform Quick Access</h3>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <a href="downloads.html" class="btn btn-secondary" style="justify-content: flex-start;">
+              <i class="fa-solid fa-cloud-arrow-down"></i> My Digital Downloads
+            </a>
+            <a href="orders.html" class="btn btn-secondary" style="justify-content: flex-start;">
+              <i class="fa-solid fa-receipt"></i> Orders & Receipts
+            </a>
+            <a href="wishlist.html" class="btn btn-secondary" style="justify-content: flex-start;">
+              <i class="fa-solid fa-heart"></i> Saved Wishlist
+            </a>
+          </div>
+        </div>
+
+        <button onclick="logout()" class="btn btn-danger" style="margin-top: 1.5rem;">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
+        </button>
+      </div>
+    </div>
+
+    <!-- Notification Center -->
+    <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--border-color);">
+        <h3 style="color: #fff; font-size: 1.25rem;"><i class="fa-regular fa-bell" style="color: #f59e0b;"></i> Notifications</h3>
+        <button onclick="markAllNotificationsAsRead()" class="btn btn-secondary" style="padding: 0.35rem 0.85rem; font-size: 0.82rem;">Mark All as Read</button>
+      </div>
+
+      <div id="notificationsList">
+        <!-- Loaded via profile.js -->
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/profile.js"></script>
+</body>
+</html>

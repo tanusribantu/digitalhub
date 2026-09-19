@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart – DigitalHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <div class="container" style="padding: 3rem 1.5rem 5rem;">
+    <h1 style="font-size: 2rem; font-weight: 800; color: #fff; margin-bottom: 2rem;">
+      <i class="fa-solid fa-cart-shopping" style="color: var(--primary);"></i> Your Shopping Cart
+    </h1>
+
+    <div style="display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 2.5rem; align-items: flex-start;">
+      <!-- Cart Items List -->
+      <div id="cartItemsList">
+        <!-- Loaded via cart.js -->
+      </div>
+
+      <!-- Order Summary Card -->
+      <div id="cartSummary" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-lg); position: sticky; top: 90px;">
+        <h3 style="color: #fff; font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--border-color);">
+          Order Summary
+        </h3>
+
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.85rem; color: var(--text-muted); font-size: 0.95rem;">
+          <span>Subtotal</span>
+          <span id="cartSubtotal" style="color: #fff; font-weight: 600;">$0.00</span>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-bottom: 1.25rem; color: #10b981; font-size: 0.95rem;">
+          <span>Promo Discount</span>
+          <span id="cartDiscount">-$0.00</span>
+        </div>
+
+        <!-- Coupon Input Box -->
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+          <input type="text" id="couponInput" class="form-control" placeholder="Promo code (e.g. DIGITAL20)" style="text-transform: uppercase;" />
+          <button class="btn btn-secondary" onclick="applyCoupon()" style="padding: 0.6rem 1.2rem; font-size: 0.88rem;">
+            Apply
+          </button>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-bottom: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--border-color); font-size: 1.25rem; font-weight: 800; color: #fff;">
+          <span>Total Amount</span>
+          <span id="cartTotal">$0.00</span>
+        </div>
+
+        <button class="btn btn-primary" onclick="proceedToCheckout()" style="width: 100%; padding: 0.85rem; font-size: 1.05rem;">
+          <i class="fa-solid fa-lock"></i> Proceed to Checkout
+        </button>
+
+        <div style="text-align: center; margin-top: 1rem;">
+          <a href="products.html" style="font-size: 0.85rem; color: var(--text-muted);"><i class="fa-solid fa-arrow-left"></i> Continue Shopping</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/cart.js"></script>
+</body>
+</html>
