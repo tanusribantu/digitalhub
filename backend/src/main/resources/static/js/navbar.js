@@ -1,7 +1,19 @@
 // Shared Dynamic Navigation Bar & Footer
-async function renderNavbar(activePage = '') {
+async function renderNavbar(activePage = '', activeCategory = '') {
   const headerContainer = document.getElementById('navbar-container');
   if (!headerContainer) return;
+
+  // Auto-detect category from URL if on products page and not specified
+  if (!activeCategory && typeof window !== 'undefined' && window.location.search) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const cat = urlParams.get('category');
+    if (cat) {
+      const lower = cat.toLowerCase();
+      if (lower === 'designs' || lower === 'design') activeCategory = 'ui-ux';
+      else if (lower === 'guides' || lower === 'guide') activeCategory = 'ebooks';
+      else activeCategory = lower;
+    }
+  }
 
   const user = getCurrentUser();
   let cartCount = 0;
@@ -76,6 +88,12 @@ async function renderNavbar(activePage = '') {
     `;
   }
 
+  const isHome = activePage === 'home';
+  const isExplore = (activePage === 'products' || !activePage) && !activeCategory;
+  const isCode = activeCategory === 'code';
+  const isDesigns = activeCategory === 'ui-ux' || activeCategory === 'designs';
+  const isGuides = activeCategory === 'ebooks' || activeCategory === 'guides';
+
   headerContainer.innerHTML = `
     <nav class="navbar">
       <div class="container nav-inner">
@@ -90,11 +108,11 @@ async function renderNavbar(activePage = '') {
         </div>
 
         <ul class="nav-links">
-          <li><a href="index.html" class="nav-link ${activePage === 'home' ? 'active' : ''}">Home</a></li>
-          <li><a href="products.html" class="nav-link ${activePage === 'products' ? 'active' : ''}">Explore</a></li>
-          <li><a href="products.html?category=code" class="nav-link">Code</a></li>
-          <li><a href="products.html?category=ui-ux" class="nav-link">Design</a></li>
-          <li><a href="products.html?category=ebooks" class="nav-link">Guides</a></li>
+          <li><a href="index.html" class="nav-link ${isHome ? 'active' : ''}">Home</a></li>
+          <li><a href="products.html" class="nav-link ${isExplore ? 'active' : ''}">Explore</a></li>
+          <li><a href="products.html?category=code" class="nav-link ${isCode ? 'active' : ''}">Code</a></li>
+          <li><a href="products.html?category=ui-ux" class="nav-link ${isDesigns ? 'active' : ''}">Designs</a></li>
+          <li><a href="products.html?category=ebooks" class="nav-link ${isGuides ? 'active' : ''}">Guides</a></li>
         </ul>
 
         <div class="nav-actions">
@@ -202,4 +220,100 @@ function renderFooter() {
       </div>
     </footer>
   `;
+}
+
+// Shared Product Card Renderer & Cart/Wishlist Actions
+function renderProductCard(p) {
+  const discountBadge = p.discountPercent > 0 ? `<span class="badge-pill badge-discount">-${p.discountPercent}%</span>` : '';
+  const formatBadge = p.fileFormat ? `<span class="badge-pill badge-format">${p.fileFormat.split(' ')[0]}</span>` : '';
+  const originalPriceHtml = p.discountPercent > 0 ? `<span class="price-old">$${p.price.toFixed(2)}</span>` : '';
+  const fallbackImg = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600';
+
+  return `
+    <div class="product-card">
+      <div class="prod-thumb-wrap" onclick="window.location.href='product-details.html?slug=${p.slug}'" style="cursor: pointer;">
+        <img src="${p.previewImageUrl || fallbackImg}" alt="${p.title}" class="prod-thumb" onerror="this.src='${fallbackImg}'" />
+        <div class="prod-badges">
+          ${discountBadge}
+          ${formatBadge}
+        </div>
+        <button class="btn-wishlist" onclick="event.stopPropagation(); toggleWishlist(${p.id}, this)" title="Add to Wishlist">
+          <i class="fa-regular fa-heart"></i>
+        </button>
+      </div>
+
+      <div class="prod-body">
+        <div class="prod-meta">
+          <span class="prod-seller"><i class="fa-solid fa-circle-check"></i> ${p.sellerName || 'Verified Studio'}</span>
+          <span>${p.categoryName || 'Resource'}</span>
+        </div>
+
+        <h3 class="prod-title" onclick="window.location.href='product-details.html?slug=${p.slug}'" style="cursor: pointer;">
+          ${p.title}
+        </h3>
+        <p class="prod-desc">${p.shortDescription || ''}</p>
+
+        <div class="prod-rating">
+          <div class="stars">
+            <i class="fa-solid fa-star"></i>
+            <span style="font-weight: 700; color: #fff; margin-left: 0.2rem;">${p.averageRating ? p.averageRating.toFixed(1) : '5.0'}</span>
+          </div>
+          <span class="rating-count">(${p.reviewCount || 0} reviews)</span>
+          <span style="margin-left: auto; color: var(--text-muted); font-size: 0.78rem;">
+            <i class="fa-solid fa-download"></i> ${p.downloadCount || 0}
+          </span>
+        </div>
+
+        <div class="prod-footer">
+          <div class="prod-pricing">
+            <span class="price-current">$${p.effectivePrice.toFixed(2)}</span>
+            ${originalPriceHtml}
+          </div>
+          <button class="btn-add-cart" onclick="addToCart(${p.id})" title="Add to Cart">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function addToCart(productId) {
+  if (!checkAuth()) {
+    showToast('Please sign in to add products to your cart', 'info');
+    setTimeout(() => window.location.href = 'login.html', 1200);
+    return;
+  }
+
+  try {
+    await api.post(`/cart/add/${productId}`);
+    showToast('Product added to your cart!', 'success');
+    renderNavbar();
+  } catch (err) {
+    showToast(err.message, 'warning');
+  }
+}
+
+async function toggleWishlist(productId, btnEl) {
+  if (!checkAuth()) {
+    showToast('Please sign in to save items to your wishlist', 'info');
+    setTimeout(() => window.location.href = 'login.html', 1200);
+    return;
+  }
+
+  try {
+    const res = await api.post(`/wishlist/toggle/${productId}`);
+    if (res.inWishlist) {
+      btnEl.classList.add('active');
+      btnEl.innerHTML = '<i class="fa-solid fa-heart"></i>';
+      showToast('Saved to wishlist', 'success');
+    } else {
+      btnEl.classList.remove('active');
+      btnEl.innerHTML = '<i class="fa-regular fa-heart"></i>';
+      showToast('Removed from wishlist', 'info');
+    }
+    renderNavbar();
+  } catch (err) {
+    showToast(err.message, 'error');
+  }
 }

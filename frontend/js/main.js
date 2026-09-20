@@ -1,12 +1,14 @@
 // Landing Page Data Loader
 document.addEventListener('DOMContentLoaded', async () => {
-  await renderNavbar('home');
-  renderFooter();
+  if (document.getElementById('trendingGrid')) {
+    await renderNavbar('home');
+    renderFooter();
 
-  loadCategories();
-  loadTrendingProducts();
-  loadBestSellers();
-  loadRecentProducts();
+    loadCategories();
+    loadTrendingProducts();
+    loadBestSellers();
+    loadRecentProducts();
+  }
 });
 
 async function loadCategories() {

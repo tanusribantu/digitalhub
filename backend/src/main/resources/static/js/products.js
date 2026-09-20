@@ -2,31 +2,83 @@
 let currentPage = 0;
 let totalPages = 1;
 const pageSize = 9;
+let allCategories = [];
+
+const categoryAliases = {
+  'designs': 'ui-ux',
+  'design': 'ui-ux',
+  'guides': 'ebooks',
+  'guide': 'ebooks',
+  'books': 'ebooks',
+  'coding': 'code'
+};
+
+function resolveCategorySlug(raw) {
+  if (!raw) return '';
+  const lower = raw.trim().toLowerCase();
+  return categoryAliases[lower] || lower;
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
-  await renderNavbar('products');
-  renderFooter();
-
   // Read URL params
   const urlParams = new URLSearchParams(window.location.search);
   const searchParam = urlParams.get('search');
-  const catParam = urlParams.get('category');
+  const catParam = resolveCategorySlug(urlParams.get('category'));
 
   if (searchParam) {
-    document.getElementById('catalogSearchInput').value = searchParam;
+    const searchInput = document.getElementById('catalogSearchInput');
+    if (searchInput) searchInput.value = searchParam;
   }
 
+  await renderNavbar('products', catParam);
+  renderFooter();
+
   await loadCategoriesFilter(catParam);
+  updateCategoryHeader(catParam);
   fetchProducts();
 
   // Filter event listeners
-  document.getElementById('catalogSearchInput').addEventListener('input', debounce(fetchProducts, 400));
-  document.getElementById('categorySelect').addEventListener('change', () => { currentPage = 0; fetchProducts(); });
-  document.getElementById('sortSelect').addEventListener('change', () => { currentPage = 0; fetchProducts(); });
-  document.getElementById('ratingSelect').addEventListener('change', () => { currentPage = 0; fetchProducts(); });
-  document.getElementById('priceRange').addEventListener('input', (e) => {
-    document.getElementById('priceRangeVal').innerText = `$${e.target.value}`;
-    debounce(fetchProducts, 300)();
+  const searchInput = document.getElementById('catalogSearchInput');
+  if (searchInput) searchInput.addEventListener('input', debounce(() => { currentPage = 0; fetchProducts(); }, 400));
+
+  const catSelect = document.getElementById('categorySelect');
+  if (catSelect) {
+    catSelect.addEventListener('change', (e) => {
+      currentPage = 0;
+      const selected = e.target.value;
+      updateCategoryUrl(selected);
+      updateCategoryHeader(selected);
+      fetchProducts();
+    });
+  }
+
+  const sortSelect = document.getElementById('sortSelect');
+  if (sortSelect) sortSelect.addEventListener('change', () => { currentPage = 0; fetchProducts(); });
+
+  const ratingSelect = document.getElementById('ratingSelect');
+  if (ratingSelect) ratingSelect.addEventListener('change', () => { currentPage = 0; fetchProducts(); });
+
+  const priceRange = document.getElementById('priceRange');
+  if (priceRange) {
+    priceRange.addEventListener('input', (e) => {
+      const valElem = document.getElementById('priceRangeVal');
+      if (valElem) valElem.innerText = `$${e.target.value}`;
+      debounce(() => { currentPage = 0; fetchProducts(); }, 300)();
+    });
+  }
+
+  // Handle browser back/forward buttons
+  window.addEventListener('popstate', () => {
+    const params = new URLSearchParams(window.location.search);
+    const popCat = resolveCategorySlug(params.get('category'));
+    const popSearch = params.get('search') || '';
+
+    if (searchInput) searchInput.value = popSearch;
+    if (catSelect) catSelect.value = popCat;
+
+    updateCategoryHeader(popCat);
+    currentPage = 0;
+    fetchProducts();
   });
 });
 
@@ -35,15 +87,73 @@ async function loadCategoriesFilter(selectedSlug) {
   if (!select) return;
 
   try {
-    const categories = await api.get('/categories');
-    categories.forEach(cat => {
+    allCategories = await api.get('/categories') || [];
+    select.innerHTML = '<option value="">All Categories</option>';
+    allCategories.forEach(cat => {
       const opt = document.createElement('option');
       opt.value = cat.slug;
       opt.textContent = cat.name;
       if (cat.slug === selectedSlug) opt.selected = true;
       select.appendChild(opt);
     });
-  } catch (e) {}
+
+    if (selectedSlug) {
+      select.value = selectedSlug;
+    }
+  } catch (e) {
+    console.error('Failed to load categories filter:', e);
+  }
+}
+
+function updateCategoryHeader(slug) {
+  const titleEl = document.getElementById('catalogPageTitle');
+  const subtitleEl = document.getElementById('catalogPageSubtitle');
+  const badgeEl = document.getElementById('catalogCategoryBadge');
+  if (!titleEl) return;
+
+  const currentCat = allCategories.find(c => c.slug === slug);
+
+  if (currentCat) {
+    titleEl.innerHTML = `<i class="${currentCat.icon || 'fa-solid fa-folder'}" style="color: var(--primary); margin-right: 0.6rem;"></i>${currentCat.name}`;
+    if (subtitleEl) subtitleEl.innerText = currentCat.description || 'Curated high-quality digital assets and tools.';
+    document.title = `${currentCat.name} – DigitalHub`;
+
+    if (badgeEl) {
+      badgeEl.style.display = 'block';
+      badgeEl.innerHTML = `
+        <span class="badge-pill badge-format" style="font-size: 0.8rem; padding: 0.35rem 0.85rem; display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); color: #a5b4fc;">
+          <i class="fa-solid fa-filter"></i> Filtered by: <strong>${currentCat.name}</strong>
+          <button onclick="clearCategoryFilter()" style="background: none; border: none; color: #f43f5e; cursor: pointer; margin-left: 0.35rem; font-size: 0.85rem;" title="Clear filter"><i class="fa-solid fa-xmark"></i></button>
+        </span>
+      `;
+    }
+  } else {
+    titleEl.innerText = 'Explore Marketplace';
+    if (subtitleEl) subtitleEl.innerText = 'Discover verified developer boilerplates, UI kits, templates, e-books, and digital design tools.';
+    document.title = 'Explore Marketplace – DigitalHub';
+    if (badgeEl) badgeEl.style.display = 'none';
+  }
+
+  renderNavbar('products', slug);
+}
+
+function updateCategoryUrl(slug) {
+  const url = new URL(window.location.href);
+  if (slug) {
+    url.searchParams.set('category', slug);
+  } else {
+    url.searchParams.delete('category');
+  }
+  window.history.pushState({ category: slug }, '', url.toString());
+}
+
+function clearCategoryFilter() {
+  const catSelect = document.getElementById('categorySelect');
+  if (catSelect) catSelect.value = '';
+  updateCategoryUrl('');
+  updateCategoryHeader('');
+  currentPage = 0;
+  fetchProducts();
 }
 
 async function fetchProducts() {
@@ -137,12 +247,22 @@ function goToPage(page) {
 }
 
 function resetFilters() {
-  document.getElementById('catalogSearchInput').value = '';
-  document.getElementById('categorySelect').value = '';
-  document.getElementById('priceRange').value = 150;
-  document.getElementById('priceRangeVal').innerText = '$150';
-  document.getElementById('ratingSelect').value = '';
-  document.getElementById('sortSelect').value = 'createdAt:desc';
+  const searchInput = document.getElementById('catalogSearchInput');
+  const catSelect = document.getElementById('categorySelect');
+  const priceRange = document.getElementById('priceRange');
+  const priceRangeVal = document.getElementById('priceRangeVal');
+  const ratingSelect = document.getElementById('ratingSelect');
+  const sortSelect = document.getElementById('sortSelect');
+
+  if (searchInput) searchInput.value = '';
+  if (catSelect) catSelect.value = '';
+  if (priceRange) priceRange.value = 150;
+  if (priceRangeVal) priceRangeVal.innerText = '$150';
+  if (ratingSelect) ratingSelect.value = '';
+  if (sortSelect) sortSelect.value = 'createdAt:desc';
+
+  updateCategoryUrl('');
+  updateCategoryHeader('');
   currentPage = 0;
   fetchProducts();
 }
